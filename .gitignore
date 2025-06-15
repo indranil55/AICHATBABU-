@@ -1,0 +1,7 @@
+# Ignore environment files and other sensitive content
+.env
+node_modules/
+dist/
+build/
+.DS_Store
+*.log

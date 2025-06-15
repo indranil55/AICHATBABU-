@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AIChatBabu</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <h1>🤖 AIChatBabu</h1>
+    <div id="chat-box" class="chat-box"></div>
+
+    <form id="chat-form">
+      <input type="text" id="user-input" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off" required />
+      <button type="submit">পাঠান</button>
+    </form>
+  </div>
+
+  <script>
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      // Show user message
+      chatBox.innerHTML += `<div class="message user">🧑 ${message}</div>`;
+      userInput.value = '';
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await res.json();
+        chatBox.innerHTML += `<div class="message bot">🤖 ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (err) {
+        chatBox.innerHTML += `<div class="message bot error">⚠️ উত্তর আনতে সমস্যা হয়েছে!</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

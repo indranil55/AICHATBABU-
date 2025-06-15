@@ -5,6 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AIChatBabu</title>
   <link rel="stylesheet" href="/style.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f8f8f8;
+    }
+    .chat-container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    .chat-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 5px;
+    }
+    .user {
+      background-color: #e0ffe0;
+      text-align: right;
+    }
+    .bot {
+      background-color: #f0f0f0;
+    }
+    .error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
   <div class="chat-container">
@@ -27,8 +61,12 @@
       const message = userInput.value.trim();
       if (!message) return;
 
-      // Show user message
-      chatBox.innerHTML += `<div class="message user">🧑 ${message}</div>`;
+      // ✅ নিরাপদভাবে ইউজার মেসেজ দেখানো
+      const userMsg = document.createElement('div');
+      userMsg.className = 'message user';
+      userMsg.textContent = message;
+      chatBox.appendChild(userMsg);
+
       userInput.value = '';
 
       try {
@@ -41,10 +79,18 @@
         });
 
         const data = await res.json();
-        chatBox.innerHTML += `<div class="message bot">🤖 ${data.reply}</div>`;
+
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+        botMsg.textContent = `🤖 ${data.reply}`;
+        chatBox.appendChild(botMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
+
       } catch (err) {
-        chatBox.innerHTML += `<div class="message bot error">⚠️ উত্তর আনতে সমস্যা হয়েছে!</div>`;
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'message bot error';
+        errorMsg.textContent = '⚠️ উত্তর আনতে সমস্যা হয়েছে!';
+        chatBox.appendChild(errorMsg);
       }
     });
   </script>
